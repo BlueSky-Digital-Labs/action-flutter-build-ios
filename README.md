@@ -27,7 +27,7 @@ This action now does automatic signing since version 2. If you do not want autom
 
 ### 2. Authenticate with Apple Developer Account 
 
-There is a section at the end of this readme explaining how to get the `APPLE_ID_PASSWORD`
+There is a section at the end of this readme explaining how to get the `APPLE_ID_PASSWORD` and how to store it in github secrets
 
 - Store the following credentials in GitHub Secrets:
   - `APPLE_ID`: Your Apple ID (email).
