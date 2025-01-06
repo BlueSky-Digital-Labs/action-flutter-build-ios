@@ -25,15 +25,18 @@ This action now does automatic signing since version 2. If you do not want autom
 
 ---
 
-### 2. Authenticate with Apple Developer Account
-- Use an **app-specific password** for your Apple ID.
+### 2. Authenticate with Apple Developer Account 
+
+There is a section at the end of this readme explaining how to get the `APPLE_ID_PASSWORD`
+
 - Store the following credentials in GitHub Secrets:
   - `APPLE_ID`: Your Apple ID (email).
-  - `APPLE_ID_PASSWORD`: The app-specific password (see the section on this at the end).
+  - `APPLE_ID_PASSWORD`: The app-specific password 
+
 
 ---
 
-# 3. Build locally
+### 3. Build locally
 
 Follow this step closely:
 
@@ -46,7 +49,9 @@ Follow this step closely:
 flutter build ipa --release --export-options-plist ios/GithubActionsExportOptions.plist
 ```
 
-# 4. Usage
+---
+
+### 4. Usage
 
 
 ```yaml
@@ -81,6 +86,8 @@ jobs:
 ```
 
 Note: when using the build-cmd, use the `--export-options-plist=ios/GithubActionsExportOptions.plist` argument, so it uses the export option created in step #3.
+
+---
 
 # How to Generate `APPLE_ID_PASSWORD` for GitHub Actions
 
