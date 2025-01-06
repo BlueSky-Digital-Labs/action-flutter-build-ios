@@ -12,8 +12,6 @@ This requires some steps in order for this action to be successful:
 
 
 
-
-
 ## Steps to Enable Automatic Signing for App Store in GitHub Actions
 
 This action now does automatic signing since version 2. If you do not want automatic signing use version 1.
@@ -31,7 +29,7 @@ This action now does automatic signing since version 2. If you do not want autom
 - Use an **app-specific password** for your Apple ID.
 - Store the following credentials in GitHub Secrets:
   - `APPLE_ID`: Your Apple ID (email).
-  - `APPLE_ID_PASSWORD`: The app-specific password.
+  - `APPLE_ID_PASSWORD`: The app-specific password (see the section on this at the end).
 
 ---
 
@@ -83,3 +81,61 @@ jobs:
 ```
 
 Note: when using the build-cmd, use the `--export-options-plist=ios/GithubActionsExportOptions.plist` argument, so it uses the export option created in step #3.
+
+# How to Generate `APPLE_ID_PASSWORD` for GitHub Actions
+
+The `APPLE_ID_PASSWORD` is an **App-Specific Password** generated from your Apple ID account. This guide explains how to create it and use it securely in GitHub Actions.
+
+---
+
+## Steps to Generate `APPLE_ID_PASSWORD`
+
+### 1. Sign In to Your Apple ID Account
+- Go to the [Apple ID Account Management page](https://appleid.apple.com/).
+- Log in with your Apple ID and password.
+
+### 2. Navigate to Security Settings
+- Scroll down to the **Security** section.
+- Ensure **Two-Factor Authentication** is enabled (this is required to generate app-specific passwords).
+
+### 3. Generate an App-Specific Password
+1. In the **Security** section, find the **App-Specific Passwords** option.
+2. Click **Generate an App-Specific Password**.
+3. Enter a label for the password (e.g., "GitHub Actions").
+4. Click **Create**.
+
+### 4. Copy the Password
+- A password in the format `abcd-efgh-ijkl-mnop` will be displayed.
+- Copy the password and store it securely.
+
+---
+
+## Adding the `APPLE_ID_PASSWORD` to GitHub Actions
+
+### 1. Open Your GitHub Repository
+- Go to the repository on GitHub.
+
+### 2. Navigate to Secrets and Variables
+- Go to **Settings > Secrets and variables > Actions**.
+
+### 3. Add a New Secret
+- Click **New repository secret**.
+- Fill in the following details:
+  - **Name:** `APPLE_ID_PASSWORD`
+  - **Value:** Paste the app-specific password you copied.
+
+---
+
+## Important Notes
+
+- **What is `APPLE_ID_PASSWORD`?**
+  - It's a password tied to your Apple ID, specifically for automating workflows like App Store submissions.
+
+- **Revoking and Regenerating:**
+  - If you revoke the app-specific password or regenerate it, update it in your GitHub repository secrets.
+
+- **Security Best Practices:**
+  - Never hard-code the `APPLE_ID_PASSWORD` in your workflow files.
+  - Keep the password secure and do not share it publicly.
+
+
