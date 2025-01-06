@@ -5,19 +5,19 @@ Setups the macos environment to be able to build a flutter app targetting ios.
 
 This requires some steps in order for this action to be successful:
 
-# See also
+## See also
 
   - [flutter build android](https://github.com/cedvdb/action-flutter-build-android)
   - [flutter build web](https://github.com/cedvdb/action-flutter-build-web)
 
 
 
-## Steps to Enable Automatic Signing for App Store in GitHub Actions
+### Steps to Enable Automatic Signing for App Store in GitHub Actions
 
 This action now does automatic signing since version 2. If you do not want automatic signing use version 1.
 
 
-### 1. Configure Your Project in Xcode
+#### 1. Configure Your Project in Xcode
 1. Open the project in Xcode.
 2. Navigate to the **Signing & Capabilities** tab.
 3. Enable **"Automatically manage signing."**
@@ -25,7 +25,7 @@ This action now does automatic signing since version 2. If you do not want autom
 
 ---
 
-### 2. Authenticate with Apple Developer Account 
+#### 2. Authenticate with Apple Developer Account 
 
 There is a section at the end of this readme explaining how to get the `APPLE_ID_PASSWORD` and how to store it in github secrets
 
@@ -36,7 +36,7 @@ There is a section at the end of this readme explaining how to get the `APPLE_ID
 
 ---
 
-### 3. Build locally
+#### 3. Build locally
 
 Follow this step closely:
 
@@ -89,43 +89,43 @@ Note: when using the build-cmd, use the `--export-options-plist=ios/GithubAction
 
 ---
 
-# How to Generate `APPLE_ID_PASSWORD` for GitHub Actions
+## How to Generate `APPLE_ID_PASSWORD` for GitHub Actions
 
 The `APPLE_ID_PASSWORD` is an **App-Specific Password** generated from your Apple ID account. This guide explains how to create it and use it securely in GitHub Actions.
 
 ---
 
-## Steps to Generate `APPLE_ID_PASSWORD`
+### Steps to Generate `APPLE_ID_PASSWORD`
 
-### 1. Sign In to Your Apple ID Account
+#### 1. Sign In to Your Apple ID Account
 - Go to the [Apple ID Account Management page](https://appleid.apple.com/).
 - Log in with your Apple ID and password.
 
-### 2. Navigate to Security Settings
+#### 2. Navigate to Security Settings
 - Scroll down to the **Security** section.
 - Ensure **Two-Factor Authentication** is enabled (this is required to generate app-specific passwords).
 
-### 3. Generate an App-Specific Password
+#### 3. Generate an App-Specific Password
 1. In the **Security** section, find the **App-Specific Passwords** option.
 2. Click **Generate an App-Specific Password**.
 3. Enter a label for the password (e.g., "GitHub Actions").
 4. Click **Create**.
 
-### 4. Copy the Password
+#### 4. Copy the Password
 - A password in the format `abcd-efgh-ijkl-mnop` will be displayed.
 - Copy the password and store it securely.
 
 ---
 
-## Adding the `APPLE_ID_PASSWORD` to GitHub Actions
+### Adding the `APPLE_ID_PASSWORD` to GitHub Actions
 
-### 1. Open Your GitHub Repository
+#### 1. Open Your GitHub Repository
 - Go to the repository on GitHub.
 
-### 2. Navigate to Secrets and Variables
+#### 2. Navigate to Secrets and Variables
 - Go to **Settings > Secrets and variables > Actions**.
 
-### 3. Add a New Secret
+#### 3. Add a New Secret
 - Click **New repository secret**.
 - Fill in the following details:
   - **Name:** `APPLE_ID_PASSWORD`
@@ -133,7 +133,7 @@ The `APPLE_ID_PASSWORD` is an **App-Specific Password** generated from your Appl
 
 ---
 
-## Important Notes
+### Important Notes
 
 - **What is `APPLE_ID_PASSWORD`?**
   - It's a password tied to your Apple ID, specifically for automating workflows like App Store submissions.
