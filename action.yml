@@ -75,18 +75,18 @@ runs:
         xcrun altool --list-providers -u "$APPLE_ID" -p "$APPLE_ID_PASSWORD"
       shell: bash
 
-    # - name: Download Provisioning Profiles
-    #   if: steps.cache-profiles.outputs.cache-hit != 'true'
-    #   env:
-    #     APPLE_ID: ${{ inputs.apple-id }}
-    #     APPLE_ID_PASSWORD: ${{ inputs.apple-id-password }}
-    #   run: |
-    #     echo "Downloading provisioning profiles..."
-    #     security create-keychain -p "" ios-build.keychain
-    #     security list-keychains -s ios-build.keychain
-    #     security unlock-keychain -p "" ios-build.keychain
-    #   working-directory: ${{ inputs.working-directory }}/ios
-    #   shell: bash
+    - name: Download Provisioning Profiles
+      if: steps.cache-profiles.outputs.cache-hit != 'true'
+      env:
+        APPLE_ID: ${{ inputs.apple-id }}
+        APPLE_ID_PASSWORD: ${{ inputs.apple-id-password }}
+      run: |
+        echo "Downloading provisioning profiles..."
+        security create-keychain -p "" ios-build.keychain
+        security list-keychains -s ios-build.keychain
+        security unlock-keychain -p "" ios-build.keychain
+      working-directory: ${{ inputs.working-directory }}/ios
+      shell: bash
 
     # fake step so the provisioning profile is correctly configured
     - name: Setup provisioning profiles
