@@ -114,11 +114,11 @@ runs:
 
 
 
-    - name: Build iOS App without Signing
+    - name: Build iOS App 
       env:
         CI: true
       run: |
-        echo "Running the iOS build command without signing..."
-        flutter build ipa --release --no-codesign --export-options-plist ios/GithubActionsExportOptions.plist -allowProvisioningUpdates
+        echo "Running the iOS build command..."
+        ${{ inputs.build-cmd }} -allowProvisioningUpdates
       shell: bash
       working-directory: ${{ inputs.working-directory }}
