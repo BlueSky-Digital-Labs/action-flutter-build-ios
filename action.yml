@@ -1,53 +1,55 @@
 name: flutter-build-ios
-description: Setups the environment to build ios apps with flutter
+description: Sets up the environment to build iOS apps with Flutter
 branding:
   icon: box
   color: green
-  
+
 inputs:
   working-directory:
-    description: The root directory of the flutter app within this repository
+    description: The root directory of the Flutter app within this repository
     default: ./
   build-cmd:
-    description: The full build command, can be used to add arguments
+    description: The full build command, including reference to exportOptions.plist
     default: flutter build ipa --release
   flutterfire:
-    description: "Whether this project uses flutterfire, this is needed because flutterfire cli adds a post build script..."
+    description: "Whether this project uses Flutterfire. Needed because the Flutterfire CLI adds a post-build script."
     required: false
-    default: "true" # we'll setup flutter fire just in case
+    default: "true" # Set up Flutterfire just in case
   apple-id:
     description: "Your Apple ID (email)"
     required: true
   apple-id-password:
     description: "The app-specific password"
     required: true
-
+  team-id:
+    description: "Your Apple Developer Team ID"
+    required: true
 
 runs:
   using: "composite"
   steps:
 
-    - name: Check flutter found
-      id: check_flutter
-      shell: bash
-      run: |
-        if flutter --version; then
-            echo "installed=true" >> "$GITHUB_OUTPUT"
-        else
-            echo "installed=false" >> "$GITHUB_OUTPUT"
-        fi
-
-    - name: Setup flutter
-      if: steps.check_flutter.outputs.installed == 'false'
+    - name: Set Up Flutter
       uses: subosito/flutter-action@v2
       with:
         channel: "stable"
         cache: true
 
-    # this is needed because flutterfire cli adds a post build script and we want to support apps with flutterfire installed
-    - name: Activate flutterfire
+    - name: Activate Flutterfire CLI
       if: ${{ inputs.flutterfire }} == 'true'
-      run: dart pub global activate flutterfire_cli 0.3.0-dev.19 --overwrite
+      run: |
+        echo "Activating Flutterfire CLI..."
+        dart pub global activate flutterfire_cli --overwrite
+      shell: bash
+
+    - name: Authenticate with Apple Developer Account
+      id: authenticate
+      env:
+        APPLE_ID: ${{ inputs.apple-id }}
+        APPLE_ID_PASSWORD: ${{ inputs.apple-id-password }}
+      run: |
+        echo "Authenticating with Apple Developer Account..."
+        xcrun altool --list-providers -u "$APPLE_ID" -p "$APPLE_ID_PASSWORD"
       shell: bash
 
     - name: Cache Provisioning Profiles
@@ -56,16 +58,6 @@ runs:
       with:
         path: ~/Library/MobileDevice/Provisioning Profiles
         key: ios-profiles-${{ inputs.team-id }}
-
-    - name: Authenticate with Apple Developer Account
-      if: steps.cache-profiles.outputs.cache-hit != 'true'
-      env:
-        APPLE_ID: ${{ inputs.apple-id }}
-        APPLE_ID_PASSWORD: ${{ inputs.apple-id-password }}
-      run: |
-        echo "Authenticating with Apple Developer Account..."
-        xcrun altool --list-providers -u "$APPLE_ID" -p "$APPLE_ID_PASSWORD"
-      shell: bash
 
     - name: Download Provisioning Profiles
       if: steps.cache-profiles.outputs.cache-hit != 'true'
@@ -77,15 +69,33 @@ runs:
         security create-keychain -p "" ios-build.keychain
         security list-keychains -s ios-build.keychain
         security unlock-keychain -p "" ios-build.keychain
-
         xcodebuild -allowProvisioningUpdates -resolvePackageDependencies
       shell: bash
 
+    - name: Validate Build Command
+      run: |
+        echo "Validating build command: ${{ inputs.build-cmd }}"
+        if [[ -z "${{ inputs.build-cmd }}" ]]; then
+          echo "Error: Build command is empty."
+          exit 1
+        fi
+      shell: bash
 
-    - name: Build iOS App 
+    - name: Build and Export iOS App
       env:
         APPLE_ID: ${{ inputs.apple-id }}
         APPLE_ID_PASSWORD: ${{ inputs.apple-id-password }}
-      run: ${{ inputs.build-cmd }}
+        CI: true
+      run: |
+        echo "Running the iOS build command..."
+        ${{ inputs.build-cmd }}
       shell: bash
       working-directory: ${{ inputs.working-directory }}
+
+    - name: Archive Build Artifacts
+      if: success()
+      uses: actions/upload-artifact@v3
+      with:
+        name: ios-build
+        path: |
+          ${{ inputs.working-directory }}/build/ios/ipa/
