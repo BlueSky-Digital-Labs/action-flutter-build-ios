@@ -6,29 +6,29 @@ branding:
   
 inputs:
   working-directory:
-    description: The root directory of the flutter app within this repository
+    description: The root directory of the Flutter app within this repository
     default: ./
   build-cmd:
     description: The full build command, can be used to add arguments
     default: flutter build ipa --release
   flutterfire:
-    description: "Whether this project uses flutterfire, this is needed because flutterfire cli adds a post build script..."
+    description: Whether this project uses FlutterFire (needed because FlutterFire CLI adds a post-build script)
     required: false
-    default: "true" # we'll setup flutter fire just in case
+    default: "true"
   apple-id:
-    description: "Your Apple ID (email)"
+    description: Your Apple ID (email)
     required: true
   apple-id-password:
-    description: "The app-specific password"
+    description: The app-specific password (use GitHub Secrets for security)
     required: true
   scheme:
-    description: "scheme"
+    description: Xcode build scheme
     required: false
-    default: "Runner"
+    default: Runner
   export-options-plist:
-    description: "file name"
+    description: Export options plist file name
     required: false
-    default: "GithubActionsExportOptions.plist"
+    default: GithubActionsExportOptions.plist
 
 
 runs:
