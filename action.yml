@@ -89,6 +89,7 @@ runs:
         APPLE_ID: ${{ inputs.apple-id }}
         APPLE_ID_PASSWORD: ${{ inputs.apple-id-password }}
       continue-on-error: true
+      working-directory: ${{ inputs.working-directory }}
       run: |
         # Navigate to the iOS directory
         cd ios
