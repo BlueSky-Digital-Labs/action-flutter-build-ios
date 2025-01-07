@@ -79,7 +79,7 @@ runs:
         security unlock-keychain -p "" ios-build.keychain
 
         xcodebuild -allowProvisioningUpdates -resolvePackageDependencies
-      working-directory: ${{ inputs.working-directory }}
+      working-directory: ${{ inputs.working-directory }}/ios
       shell: bash
 
     # fake step so the provisioning profile is correctly configured
@@ -90,25 +90,22 @@ runs:
         APPLE_ID: ${{ inputs.apple-id }}
         APPLE_ID_PASSWORD: ${{ inputs.apple-id-password }}
       continue-on-error: true
-      working-directory: ${{ inputs.working-directory }}
+      working-directory: ${{ inputs.working-directory }}/ios
       run: |
-        # Navigate to the iOS directory
-        cd ios
-        
         # Build the app, archive it, and export the IPA in one command sequence
         xcodebuild -workspace Runner.xcworkspace \
           -scheme Runner \
           -configuration Release \
           -sdk iphoneos \
           -allowProvisioningUpdates \
-          -archivePath $PWD/build/ios/archive/Runner.xcarchive \
+          -archivePath ${{ inputs.working-directory }}/build/ios/archive/Runner.xcarchive \
           clean archive && \
           
           # Export the IPA from the generated .xcarchive
           xcodebuild -exportArchive \
-            -archivePath $PWD/build/ios/archive/Runner.xcarchive \
+            -archivePath ${{ inputs.working-directory }}/build/ios/archive/Runner.xcarchive \
             -exportOptionsPlist ios/GithubActionsExportOptions.plist \
-            -exportPath $PWD/build/ios/ipa \
+            -exportPath ${{ inputs.working-directory }}/build/ios/ipa \
             -allowProvisioningUpdates
 
             xcodebuild -allowProvisioningUpdates -resolvePackageDependencies
