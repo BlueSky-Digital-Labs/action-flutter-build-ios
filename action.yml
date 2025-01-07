@@ -92,6 +92,7 @@ runs:
       continue-on-error: true
       working-directory: ${{ inputs.working-directory }}/ios
       run: |
+        echo "Setup profile with a failed command..."
         # Build the app, archive it, and export the IPA in one command sequence
         xcodebuild -workspace Runner.xcworkspace \
           -scheme Runner \
@@ -99,20 +100,8 @@ runs:
           -sdk iphoneos \
           -allowProvisioningUpdates \
           -archivePath ${{ inputs.working-directory }}/build/ios/archive/Runner.xcarchive \
-          clean archive && \
-          
-          # Export the IPA from the generated .xcarchive
-          xcodebuild -exportArchive \
-            -archivePath ${{ inputs.working-directory }}/build/ios/archive/Runner.xcarchive \
-            -exportOptionsPlist ios/GithubActionsExportOptions.plist \
-            -exportPath ${{ inputs.working-directory }}/build/ios/ipa \
-            -allowProvisioningUpdates
-
-            xcodebuild -allowProvisioningUpdates -resolvePackageDependencies
+          clean archive ||  echo "Failed xcode build (expected), will now use flutter build..."
           shell: bash
-
-
-
 
     - name: Build iOS App 
       env:
