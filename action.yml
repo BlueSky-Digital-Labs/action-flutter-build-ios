@@ -100,11 +100,11 @@ runs:
           clean archive ||  echo "Failed xcode build (expected), will now use flutter build..."
         
 
-    - name: Build iOS App 
+    - name: Build flutter App 
       env:
         CI: true
       run: |
-        echo "Running the iOS build command..."
-        ${{ inputs.build-cmd }} -allowProvisioningUpdates
+        echo "Running the flutter build command..."
+        ${{ inputs.build-cmd }} --allowProvisioningUpdates
       shell: bash
       working-directory: ${{ inputs.working-directory }}
