@@ -52,8 +52,8 @@ runs:
 
     - name: Authenticate with Apple Developer Account
       env:
-        APPLE_ID: ${{ secrets.APPLE_ID }}
-        APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+        APPLE_ID: ${{ inputs.APPLE_ID }}
+        APPLE_ID_PASSWORD: ${{ inputs.APPLE_ID_PASSWORD }}
       run: |
         xcrun altool --list-providers -u "$APPLE_ID" -p "$APPLE_ID_PASSWORD"
       shell: bash

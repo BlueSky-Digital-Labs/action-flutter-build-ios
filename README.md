@@ -43,7 +43,36 @@ Follow this step closely:
 1. In Xcode, automatic signing should be checked for a new flutter project. Build your project once with this enabled.
 2. Once your app has been built locally, you should have a `ExportOptions.plist` file created in the build directory `build/ios/ipa/ExportOptions.plist`. 
 3. Copy the content of `ExportOptions.plist` and add it to a new `GithubActionsExportOptions.plist` file in the ios directory. This will be used by the action to sign the app.
-4. You should now be able to build the project locally the same way it will be built in the action, verify that it is the case:
+4. Replace the `method` with the desired one in `GithubActionsExportOptions.plist` (eg: ad-hoc)
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>destination</key>
+	<string>export</string>
+	<key>generateAppStoreInformation</key>
+	<false/>
+	<key>manageAppVersionAndBuildNumber</key>
+	<true/>
+	<key>method</key>
+	<string>app-store-connect</string>
+	<key>signingStyle</key>
+	<string>automatic</string>
+	<key>stripSwiftSymbols</key>
+	<true/>
+	<key>teamID</key>
+	<string>XXX</string>
+	<key>testFlightInternalTestingOnly</key>
+	<false/>
+	<key>uploadSymbols</key>
+	<true/>
+</dict>
+</plist>
+
+```
+5. You should now be able to build the project locally the same way it will be built in the action, verify that it is the case:
 
 ```
 flutter build ipa --release --export-options-plist ios/GithubActionsExportOptions.plist
