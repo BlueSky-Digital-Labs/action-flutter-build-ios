@@ -50,12 +50,35 @@ runs:
       run: dart pub global activate flutterfire_cli 0.3.0-dev.19 --overwrite
       shell: bash
 
+    - name: Cache Provisioning Profiles
+      uses: actions/cache@v3
+      id: cache-profiles
+      with:
+        path: ~/Library/MobileDevice/Provisioning Profiles
+        key: ios-profiles-${{ inputs.team-id }}
+
     - name: Authenticate with Apple Developer Account
+      if: steps.cache-profiles.outputs.cache-hit != 'true'
       env:
         APPLE_ID: ${{ inputs.apple-id }}
         APPLE_ID_PASSWORD: ${{ inputs.apple-id-password }}
       run: |
+        echo "Authenticating with Apple Developer Account..."
         xcrun altool --list-providers -u "$APPLE_ID" -p "$APPLE_ID_PASSWORD"
+      shell: bash
+
+    - name: Download Provisioning Profiles
+      if: steps.cache-profiles.outputs.cache-hit != 'true'
+      env:
+        APPLE_ID: ${{ inputs.apple-id }}
+        APPLE_ID_PASSWORD: ${{ inputs.apple-id-password }}
+      run: |
+        echo "Downloading provisioning profiles..."
+        security create-keychain -p "" ios-build.keychain
+        security list-keychains -s ios-build.keychain
+        security unlock-keychain -p "" ios-build.keychain
+
+        xcodebuild -allowProvisioningUpdates -resolvePackageDependencies
       shell: bash
 
 
