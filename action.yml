@@ -77,8 +77,6 @@ runs:
         security create-keychain -p "" ios-build.keychain
         security list-keychains -s ios-build.keychain
         security unlock-keychain -p "" ios-build.keychain
-
-        xcodebuild -allowProvisioningUpdates -resolvePackageDependencies
       working-directory: ${{ inputs.working-directory }}/ios
       shell: bash
 
@@ -93,13 +91,13 @@ runs:
       working-directory: ${{ inputs.working-directory }}/ios
       run: |
         echo "Setup profile with a failed command..."
-        result="$(xcodebuild -workspace Runner.xcworkspace \
+        xcodebuild -workspace Runner.xcworkspace \
           -scheme Runner \
           -configuration Release \
           -sdk iphoneos \
           -allowProvisioningUpdates \
           -archivePath ${{ inputs.working-directory }}/build/ios/archive/Runner.xcarchive \
-          clean archive ||  echo "Failed xcode build (expected), will now use flutter build...")"
+          clean archive ||  echo "Failed xcode build (expected), will now use flutter build..."
         
 
     - name: Build iOS App 
