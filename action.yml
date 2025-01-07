@@ -61,8 +61,8 @@ runs:
 
     - name: Build iOS App 
       env:
-        APPLE_ID: ${{ secrets.APPLE_ID }}
-        APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+        APPLE_ID: ${{ inputs.APPLE_ID }}
+        APPLE_ID_PASSWORD: ${{ inputs.APPLE_ID_PASSWORD }}
       run: ${{ inputs.build-cmd }}
       shell: bash
       working-directory: ${{ inputs.working-directory }}
