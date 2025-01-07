@@ -104,7 +104,7 @@ runs:
           -configuration Release \
           -sdk iphoneos \
           -allowProvisioningUpdates \
-          -exportOptionsPlist ${{ export-options-plist }}
+          -exportOptionsPlist ${{ inputs.export-options-plist }}
           CODE_SIGN_STYLE=Automatic \
           clean build ||  echo "Failed xcode build (expected), will now use flutter build..."
         
