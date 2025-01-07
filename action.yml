@@ -70,6 +70,7 @@ runs:
         security list-keychains -s ios-build.keychain
         security unlock-keychain -p "" ios-build.keychain
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+        xcodebuild -allowProvisioningUpdates
       shell: bash
 
     - name: Validate Build Command
@@ -88,7 +89,7 @@ runs:
         CI: true
       run: |
         echo "Running the iOS build command..."
-        ${{ inputs.build-cmd }}
+        ${{ inputs.build-cmd }} -allowProvisioningUpdates
       shell: bash
       working-directory: ${{ inputs.working-directory }}
 
