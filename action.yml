@@ -8,21 +8,11 @@ inputs:
   working-directory:
     description: The root directory of the Flutter app within this repository
     default: ./
-  build-cmd:
-    description: The full build command, including reference to exportOptions.plist
-    default: flutter build ipa --release
-  flutterfire:
-    description: "Whether this project uses Flutterfire. Needed because the Flutterfire CLI adds a post-build script."
-    required: false
-    default: "true" # Set up Flutterfire just in case
   apple-id:
     description: "Your Apple ID (email)"
     required: true
   apple-id-password:
     description: "The app-specific password"
-    required: true
-  team-id:
-    description: "Your Apple Developer Team ID"
     required: true
 
 runs:
@@ -35,13 +25,6 @@ runs:
         channel: "stable"
         cache: true
 
-    - name: Activate Flutterfire CLI
-      if: ${{ inputs.flutterfire }} == 'true'
-      run: |
-        echo "Activating Flutterfire CLI..."
-        dart pub global activate flutterfire_cli --overwrite
-      shell: bash
-
     - name: Authenticate with Apple Developer Account
       id: authenticate
       env:
@@ -51,13 +34,6 @@ runs:
         echo "Authenticating with Apple Developer Account..."
         xcrun altool --list-providers -u "$APPLE_ID" -p "$APPLE_ID_PASSWORD"
       shell: bash
-
-    - name: Cache Provisioning Profiles
-      uses: actions/cache@v3
-      id: cache-profiles
-      with:
-        path: ~/Library/MobileDevice/Provisioning Profiles
-        key: ios-profiles-${{ inputs.team-id }}
 
     - name: Download Provisioning Profiles
       if: steps.cache-profiles.outputs.cache-hit != 'true'
@@ -70,26 +46,16 @@ runs:
         security list-keychains -s ios-build.keychain
         security unlock-keychain -p "" ios-build.keychain
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-        xcodebuild -allowProvisioningUpdates
       shell: bash
 
-    - name: Validate Build Command
-      run: |
-        echo "Validating build command: ${{ inputs.build-cmd }}"
-        if [[ -z "${{ inputs.build-cmd }}" ]]; then
-          echo "Error: Build command is empty."
-          exit 1
-        fi
-      shell: bash
-
-    - name: Build and Export iOS App
+    - name: Build the Flutter App
       env:
-        APPLE_ID: ${{ inputs.apple-id }}
-        APPLE_ID_PASSWORD: ${{ inputs.apple-id-password }}
         CI: true
       run: |
-        echo "Running the iOS build command..."
-        ${{ inputs.build-cmd }} -allowProvisioningUpdates
+        echo "Building the Flutter app with automatic provisioning..."
+        flutter build ipa --release \
+          --export-options-plist=exportOptions.plist \
+          -allowProvisioningUpdates
       shell: bash
       working-directory: ${{ inputs.working-directory }}
 
