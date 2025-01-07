@@ -79,6 +79,7 @@ runs:
         security unlock-keychain -p "" ios-build.keychain
 
         xcodebuild -allowProvisioningUpdates -resolvePackageDependencies
+      working-directory: ${{ inputs.working-directory }}
       shell: bash
 
     # fake step so the provisioning profile is correctly configured
