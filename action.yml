@@ -52,8 +52,8 @@ runs:
 
     - name: Authenticate with Apple Developer Account
       env:
-        APPLE_ID: ${{ inputs.APPLE_ID }}
-        APPLE_ID_PASSWORD: ${{ inputs.APPLE_ID_PASSWORD }}
+        APPLE_ID: ${{ inputs.apple-id }}
+        APPLE_ID_PASSWORD: ${{ inputs.apple-id-password }}
       run: |
         xcrun altool --list-providers -u "$APPLE_ID" -p "$APPLE_ID_PASSWORD"
       shell: bash
@@ -61,8 +61,8 @@ runs:
 
     - name: Build iOS App 
       env:
-        APPLE_ID: ${{ inputs.APPLE_ID }}
-        APPLE_ID_PASSWORD: ${{ inputs.APPLE_ID_PASSWORD }}
+        APPLE_ID: ${{ inputs.apple-id }}
+        APPLE_ID_PASSWORD: ${{ inputs.apple-id-password }}
       run: ${{ inputs.build-cmd }}
       shell: bash
       working-directory: ${{ inputs.working-directory }}
