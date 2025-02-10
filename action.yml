@@ -86,28 +86,7 @@ runs:
         security list-keychains -s ios-build.keychain
         security unlock-keychain -p "" ios-build.keychain
       working-directory: ${{ inputs.working-directory }}/ios
-      shell: bash
-
-    # fake step so the provisioning profile is correctly configured
-    - name: Setup provisioning profiles
-      shell: bash
-      env:
-        CI: true
-        APPLE_ID: ${{ inputs.apple-id }}
-        APPLE_ID_PASSWORD: ${{ inputs.apple-id-password }}
-      continue-on-error: true
-      working-directory: ${{ inputs.working-directory }}/ios
-      run: |
-        echo "Setup profile with a failed command..."
-        xcodebuild -workspace Runner.xcworkspace \
-          -scheme ${{ inputs.scheme }} \
-          -configuration Release \
-          -sdk iphoneos \
-          -allowProvisioningUpdates \
-          -exportOptionsPlist ${{ inputs.export-options-plist }}
-          CODE_SIGN_STYLE=Automatic \
-          clean build ||  echo "Failed xcode build (expected), will now use flutter build..."
-        
+      shell: bash        
 
     - name: Build flutter App 
       env:
