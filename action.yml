@@ -86,13 +86,25 @@ runs:
         security list-keychains -s ios-build.keychain
         security unlock-keychain -p "" ios-build.keychain
       working-directory: ${{ inputs.working-directory }}/ios
-      shell: bash        
+      shell: bash  
+      
+    - name: Check Provisioning Profiles
+      run: |
+        PROFILE_COUNT=$(ls -1 ~/Library/MobileDevice/Provisioning\ Profiles | wc -l)
+        if [ "$PROFILE_COUNT" -eq "0" ]; then
+          echo "❌ No provisioning profiles found! Exiting..."
+          exit 1
+        else
+          echo "✅ Provisioning profiles found:"
+          ls -l ~/Library/MobileDevice/Provisioning\ Profiles
+        fi
+      shell: bash
 
     - name: Build flutter App 
       env:
         CI: true
       run: |
         echo "Running the flutter build command..."
-        ${{ inputs.build-cmd }}
+        flutter build ipa --release 
       shell: bash
       working-directory: ${{ inputs.working-directory }}
