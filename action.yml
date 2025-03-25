@@ -53,7 +53,7 @@ runs:
 
     - name: Activate flutterfire
       if: ${{ inputs.flutterfire }} == 'true'
-      run: dart pub global activate flutterfire_cli 0.3.0-dev.19 --overwrite
+      run: dart pub global activate flutterfire_cli
       shell: bash
 
     # see https://docs.github.com/en/actions/deployment/deploying-xcode-applications/installing-an-apple-certificate-on-macos-runners-for-xcode-development for more info
